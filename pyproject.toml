@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "arfs_gen"
-version = "1.0.2"
+version = "1.0.3"
 description = "Library to generate toy data for machine learning experiments in the context of all-relevant feature selection."
 authors = ["Lukas Pfannschmidt <lukas@lpfann.me>"]
 license = "MIT"
