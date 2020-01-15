@@ -8,6 +8,36 @@ In the newest revision it also includes methods which generate data with privile
 
 It works by utilizing existing methods from `numpy` and `scikit-learn`.
 
+# Usage
+In the following we generate a simple regression data set with a mix of strongly and weakly relevant features:
+
+```python
+    # Import relevant method
+    from arfs_gen import genRegressionData
+    # Import model
+    from sklearn.svm import LinearSVR
+
+    # Specify parameters
+    n = 100
+    # Features
+    strRel = 2
+    strWeak = 2
+    # Overall number of features (Rest will be filled by random features)
+    d = 10
+
+    # Generate the data
+    X, y = genRegressionData(
+        n_samples=n,
+        n_features=d,
+        n_redundant=strWeak,
+        n_strel=strRel,
+        n_repeated=0,
+        noise=0,
+    )
+    # Fit a model
+    linsvr = LinearSVR()
+    linsvr.fit(X, y)
+```
 
 # Development
 For dependency management we use the newly released [poetry](https://python-poetry.org/) tool.
