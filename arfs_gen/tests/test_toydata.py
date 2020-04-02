@@ -1,11 +1,11 @@
 import pytest
 from sklearn import linear_model
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import r2_score
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import LinearSVR
 from sklearn.utils import check_random_state
-from sklearn.utils.testing import assert_equal
 
 from arfs_gen import ProblemName
 from arfs_gen import quick_generate
@@ -35,10 +35,10 @@ def test_shape(n_samples, n_dim):
     X, y = genClassificationData(n_samples=n_samples, n_features=n_dim)
 
     # Equal length
-    assert_equal(len(X), len(y))
+    assert len(X) == len(y)
     # Correct parameters
-    assert_equal(len(X), n_samples)
-    assert_equal(X.shape[1], n_dim)
+    assert len(X) == n_samples
+    assert X.shape[1] == n_dim
 
 
 @pytest.mark.parametrize(
@@ -62,7 +62,8 @@ def test_wrong_values(wrong_param):
 @pytest.mark.parametrize("weak", [0, 1, 2, 20])
 @pytest.mark.parametrize("repeated", [0, 1, 2, 5])
 @pytest.mark.parametrize("flip_y", [0, 0.1, 1])
-def test_genClassification(strong, weak, repeated, flip_y):
+@pytest.mark.parametrize("linear", [True, False], ids=["linear", "nonlinear"])
+def test_genClassification(strong, weak, repeated, flip_y, linear):
     n_samples = 10
     n_features = 100
     args = {
@@ -72,6 +73,7 @@ def test_genClassification(strong, weak, repeated, flip_y):
         "n_redundant": weak,
         "n_repeated": repeated,
         "flip_y": flip_y,
+        "linear": linear,
     }
 
     gen = genClassificationData
@@ -85,13 +87,22 @@ def test_genClassification(strong, weak, repeated, flip_y):
             X, y = gen(**args)
         return
 
+    # Non-linear data requires at least 2 strongly relevant features
+    if not linear and strong == 0 and weak > 0:
+        with pytest.raises(ValueError):
+            X, y = gen(**args)
+        return
+    elif not linear and strong < 2 and weak == 0:
+        with pytest.raises(ValueError):
+            X, y = gen(**args)
+        return
     X, y = gen(**args)
 
     # Equal length
-    assert_equal(len(X), len(y))
+    assert len(X) == len(y)
     # Correct parameters
-    assert_equal(len(X), n_samples)
-    assert_equal(X.shape[1], n_features)
+    assert len(X) == n_samples
+    assert X.shape[1] == n_features
 
 
 @pytest.mark.parametrize("strong", [0, 1, 2, 20, 50])
@@ -120,10 +131,10 @@ def test_genRegression(strong, weak, repeated, noise):
     X, y = gen(**args)
 
     # Equal length
-    assert_equal(len(X), len(y))
+    assert len(X) == len(y)
     # Correct parameters
-    assert_equal(len(X), n_samples)
-    assert_equal(X.shape[1], n_features)
+    assert len(X) == n_samples
+    assert X.shape[1] == n_features
 
 
 @pytest.mark.parametrize("strong", [0, 1, 2, 20, 50])
@@ -154,10 +165,10 @@ def test_genOrdinalRegression(strong, weak, repeated, noise, bins, n_samples):
     X, y = gen(**args)
 
     # Equal length
-    assert_equal(len(X), len(y))
+    assert len(X) == len(y)
     # Correct parameters
-    assert_equal(len(X), n_samples)
-    assert_equal(X.shape[1], n_features)
+    assert len(X) == n_samples
+    assert X.shape[1] == n_features
 
 
 def test_data_truth():
@@ -183,6 +194,37 @@ def test_data_truth():
     r2 = r2_score(y_test, pred)
 
     assert r2 > 0.9
+
+
+def test_lm_on_nonlinear_data(random_state):
+    """
+        Check if data is non-linearly separable by comparing fit of a simple linear model and random forest classifier.
+    """
+    n = 200
+    d = 5
+    strRel = 2
+
+    X, y = genClassificationData(
+        linear=False,
+        n_samples=n,
+        n_features=d,
+        n_redundant=0,
+        n_strel=strRel,
+        n_repeated=0,
+        random_state=random_state,
+    )
+    X = StandardScaler().fit_transform(X)
+    model = linear_model.SGDClassifier(random_state=random_state)
+    model.fit(X, y)
+    score = model.score(X, y)
+    assert score < 0.65
+
+    rf = RandomForestClassifier(
+        random_state=random_state, max_depth=10, n_estimators=20
+    )
+    rf.fit(X, y)
+    score = rf.score(X, y)
+    assert score > 0.95
 
 
 def test_data_noise(random_state):
@@ -244,7 +286,7 @@ def test_partition(problem, partition):
     X, y = gen(**args)
 
     # Equal length
-    assert_equal(len(X), len(y))
+    assert len(X) == len(y)
     # Correct parameters
-    assert_equal(len(X), n_samples)
-    assert_equal(X.shape[1], n_features)
+    assert len(X) == n_samples
+    assert X.shape[1] == n_features

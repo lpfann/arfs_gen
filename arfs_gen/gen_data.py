@@ -1,4 +1,5 @@
 import numpy as np
+from sklearn.datasets import make_classification
 from numpy.random import RandomState
 from sklearn.utils import check_random_state
 from sklearn.utils import shuffle
@@ -125,6 +126,7 @@ def genClassificationData(
     flip_y: float = 0,
     random_state: object = None,
     partition=None,
+    linear=True,
 ):
     """Generate synthetic classification data
     
@@ -185,10 +187,37 @@ def genClassificationData(
     else:
         part_size = 0
 
-    X_informative, Y = generate_binary_classification_problem(
-        n_samples, n_strel + part_size, random_state
-    )
+    n_informative = n_strel + part_size
+    if linear:
+        X_informative, Y = generate_binary_classification_problem(
+            n_samples, n_informative, random_state
+        )
+    else:
+        if n_informative < 2:
+            raise ValueError(
+                "Generating non-linear data requires more than 1 strongly relevant feature. "
+                "Specifying 'n_redundant' implicitly requests only 1 strongly relevant feature. "
+                "Try increasing 'n_strel' to >=1."
+            )
+        # Create classif. set with 2 clusters per class
+        X_informative, Y = make_classification(
+            n_samples=n_samples,
+            n_features=n_informative,
+            n_informative=n_informative,
+            n_redundant=0,
+            n_repeated=0,
+            n_classes=2,
+            n_clusters_per_class=2,
+            flip_y=0.00,
+            class_sep=0.5,
+            hypercube=True,
+            shift=0.0,
+            scale=1.0,
+            shuffle=False,
+            random_state=random_state,
+        )
 
+    # We extend X with several types of other features (linear combinations, repeats, random features)
     X = _fillVariableSpace(
         X_informative,
         random_state,
