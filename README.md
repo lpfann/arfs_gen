@@ -1,7 +1,6 @@
 # All Relevant Feature Selection Generator Library (ARFS-Gen)
-
-![https://pypi.org/project/arfs-gen/](https://img.shields.io/pypi/v/arfs_gen)
-![https://pypi.org/project/arfs-gen/](https://img.shields.io/pypi/pyversions/arfs_gen)
+![PyPI](https://img.shields.io/pypi/v/arfs_gen)
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/arfs_gen)
 ![PyPI - License](https://img.shields.io/pypi/l/arfs_gen)
 
 This repository contains a python library to generate synthetic (toy) data for use in research papers when evaluating all relevant feature selection e.g.  used in [fri](https://github.com/lpfann/fri).
@@ -11,16 +10,6 @@ It allows creating datasets with a specified number of strongly and weakly relev
 In the newest revision it also includes methods which generate data with privileged information.
 
 It works by utilizing existing methods from `numpy` and `scikit-learn`.
-# Install
-The library is available on [PyPi](https://pypi.org/project/arfs-gen/).
-Install via `pip`:
-```shell
-pip install arfs_gen
-```
-or clone this repository and use:
-```shell
-pip install .
-```
 
 # Usage
 In the following we generate a simple regression data set with a mix of strongly and weakly relevant features:
