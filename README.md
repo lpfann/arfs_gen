@@ -1,4 +1,7 @@
 # All Relevant Feature Selection Generator Library (ARFS-Gen)
+![PyPI](https://img.shields.io/pypi/v/arfs_gen)
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/arfs_gen)
+![PyPI - License](https://img.shields.io/pypi/l/arfs_gen)
 
 This repository contains a python library to generate synthetic (toy) data for use in research papers when evaluating all relevant feature selection e.g.  used in [fri](https://github.com/lpfann/fri).
 
