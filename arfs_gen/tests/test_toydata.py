@@ -5,7 +5,6 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import LinearSVR
 from sklearn.utils import check_random_state
-from sklearn.utils.testing import assert_equal
 
 from arfs_gen import ProblemName
 from arfs_gen import quick_generate
@@ -35,10 +34,10 @@ def test_shape(n_samples, n_dim):
     X, y = genClassificationData(n_samples=n_samples, n_features=n_dim)
 
     # Equal length
-    assert_equal(len(X), len(y))
+    assert len(X) == len(y)
     # Correct parameters
-    assert_equal(len(X), n_samples)
-    assert_equal(X.shape[1], n_dim)
+    assert len(X) == n_samples
+    assert X.shape[1] == n_dim
 
 
 @pytest.mark.parametrize(
@@ -88,10 +87,10 @@ def test_genClassification(strong, weak, repeated, flip_y):
     X, y = gen(**args)
 
     # Equal length
-    assert_equal(len(X), len(y))
+    assert len(X) == len(y)
     # Correct parameters
-    assert_equal(len(X), n_samples)
-    assert_equal(X.shape[1], n_features)
+    assert len(X) == n_samples
+    assert X.shape[1] == n_features
 
 
 @pytest.mark.parametrize("strong", [0, 1, 2, 20, 50])
@@ -120,10 +119,10 @@ def test_genRegression(strong, weak, repeated, noise):
     X, y = gen(**args)
 
     # Equal length
-    assert_equal(len(X), len(y))
+    assert len(X) == len(y)
     # Correct parameters
-    assert_equal(len(X), n_samples)
-    assert_equal(X.shape[1], n_features)
+    assert len(X) == n_samples
+    assert X.shape[1] == n_features
 
 
 @pytest.mark.parametrize("strong", [0, 1, 2, 20, 50])
@@ -154,10 +153,10 @@ def test_genOrdinalRegression(strong, weak, repeated, noise, bins, n_samples):
     X, y = gen(**args)
 
     # Equal length
-    assert_equal(len(X), len(y))
+    assert len(X) == len(y)
     # Correct parameters
-    assert_equal(len(X), n_samples)
-    assert_equal(X.shape[1], n_features)
+    assert len(X) == n_samples
+    assert X.shape[1] == n_features
 
 
 def test_data_truth():
@@ -244,7 +243,7 @@ def test_partition(problem, partition):
     X, y = gen(**args)
 
     # Equal length
-    assert_equal(len(X), len(y))
+    assert len(X) == len(y)
     # Correct parameters
-    assert_equal(len(X), n_samples)
-    assert_equal(X.shape[1], n_features)
+    assert len(X) == n_samples
+    assert X.shape[1] == n_features
