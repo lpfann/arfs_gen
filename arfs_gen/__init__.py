@@ -1,12 +1,15 @@
 from enum import Enum
+
+
 class ProblemName(Enum):
-    
+
     CLASSIFICATION = 1
     REGRESSION = 2
     ORDINALREGRESSION = 3
     LUPI_CLASSIFICATION = 4
     LUPI_REGRESSION = 5
     LUPI_ORDREGRESSION = 6
+
 
 import numpy as np
 from .gen_data import genRegressionData, genClassificationData, genOrdinalRegressionData
