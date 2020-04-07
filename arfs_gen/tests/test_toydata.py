@@ -88,7 +88,7 @@ def test_genClassification(strong, weak, repeated, flip_y, linear):
         return
 
     # Non-linear data requires at least 2 strongly relevant features
-    if not linear and strong == 0 and weak > 0:
+    if not linear and strong == 0 and weak < 5:
         with pytest.raises(ValueError):
             X, y = gen(**args)
         return

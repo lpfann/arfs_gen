@@ -1,8 +1,7 @@
 import numpy as np
-from sklearn.datasets import make_classification
 from numpy.random import RandomState
-from sklearn.utils import check_random_state
-from sklearn.utils import shuffle
+from sklearn.datasets import make_classification
+from sklearn.utils import check_random_state, shuffle
 
 
 def _combFeat(n, size, strRelFeat, randomstate):
@@ -180,8 +179,19 @@ def genClassificationData(
 
     # Find partitions which defíne the weakly relevant subsets
     if partition is None and n_redundant > 0:
-        partition = [n_redundant]
-        part_size = 1
+        if not linear and n_strel==0 and n_redundant <=4:
+            raise ValueError(
+                "Generating non-linear data requires multiple informative features."
+                "Increase `n_redundant` to 5 or more add at least 1 `n_strel` feature"
+            )
+        elif not linear and n_strel==0:
+            assert n_redundant>4
+            # We create 2 partitions to have at least 2 informative features for non-linear problem
+            partition = [2,n_redundant-2]
+            part_size = 2
+        else:
+            partition = [n_redundant]
+            part_size = 1
     elif partition is not None:
         part_size = len(partition)
     else:
