@@ -98,7 +98,7 @@ def _fillVariableSpace(
 def generate_binary_classification_problem(
     n_samples: int, features: int, random_state: RandomState = None, data_range=1
 ):
-    """ Generate data uniformly distributed in a square and perfectly separated by the hyperplane given by normal_vector and b.
+    """Generate data uniformly distributed in a square and perfectly separated by the hyperplane given by normal_vector and b.
     Keyword arguments:
     n_samples -- number of samples required (default 100)
     n_features -- number of features required
@@ -128,7 +128,7 @@ def genClassificationData(
     linear=True,
 ):
     """Generate synthetic classification data
-    
+
     Parameters
     ----------
     n_samples : int, optional
@@ -140,28 +140,28 @@ def genClassificationData(
     n_strel : int, optional
         Number of features which are mandatory for the underlying model (strongly relevant)
     n_repeated : int, optional
-        Number of features which are clones of existing ones. 
+        Number of features which are clones of existing ones.
     noise : float
         Added gaussian noise to data. Parameter scales Std of normal distribution.
     flip_y : float, optional
         Ratio of samples randomly switched to wrong class.
     random_state : object, optional
         Randomstate object used for generation.
-    
+
     Returns
     -------
     X : array of shape [n_samples, n_features]
         The generated samples.
     y : array of shape [n_samples]
         The output classes.
-    
+
     Raises
     ------
     ValueError
         Description
     ValueError
     Wrong parameters for specified amonut of features/samples.
-    
+
 
     Examples
     ---------
@@ -179,15 +179,15 @@ def genClassificationData(
 
     # Find partitions which defíne the weakly relevant subsets
     if partition is None and n_redundant > 0:
-        if not linear and n_strel==0 and n_redundant <=4:
+        if not linear and n_strel == 0 and n_redundant <= 4:
             raise ValueError(
                 "Generating non-linear data requires multiple informative features."
                 "Increase `n_redundant` to 5 or more add at least 1 `n_strel` feature"
             )
-        elif not linear and n_strel==0:
-            assert n_redundant>4
+        elif not linear and n_strel == 0:
+            assert n_redundant > 4
             # We create 2 partitions to have at least 2 informative features for non-linear problem
-            partition = [2,n_redundant-2]
+            partition = [2, n_redundant - 2]
             part_size = 2
         else:
             partition = [n_redundant]
@@ -259,7 +259,7 @@ def genRegressionData(
     partition=None,
 ) -> object:
     """Generate synthetic regression data
-    
+
     Parameters
     ----------
     n_samples : int, optional
@@ -271,7 +271,7 @@ def genRegressionData(
     n_strel : int, optional
         Number of features which are mandatory for the underlying model (strongly relevant)
     n_repeated : int, optional
-        Number of features which are clones of existing ones. 
+        Number of features which are clones of existing ones.
     noise : float, optional
         Noise of the created samples around ground truth.
     random_state : object, optional
@@ -283,7 +283,7 @@ def genRegressionData(
         The generated samples.
     y : array of shape [n_samples]
         The output values (target).
-    
+
     Raises
     ------
     ValueError

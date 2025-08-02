@@ -198,7 +198,7 @@ def test_data_truth():
 
 def test_lm_on_nonlinear_data(random_state):
     """
-        Check if data is non-linearly separable by comparing fit of a simple linear model and random forest classifier.
+    Check if data is non-linearly separable by comparing fit of a simple linear model and random forest classifier.
     """
     n = 200
     d = 5
@@ -245,7 +245,7 @@ def test_data_noise(random_state):
     X_train, X_test, y_train, y_test = train_test_split(
         X, Y, test_size=0.33, random_state=random_state
     )
-    reg = linear_model.LinearRegression(normalize=True)
+    reg = linear_model.LinearRegression()
     reg.fit(X_train, y_train)
 
     testscore = reg.score(X_test, y_test)
