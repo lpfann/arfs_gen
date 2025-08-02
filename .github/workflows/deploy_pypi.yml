@@ -2,37 +2,53 @@ name: Deploy to PyPI
 
 on:
   release:
-    types: [created,published,edited] # Only deploy when publishing github releases
+    types: [created, published, edited] # Only deploy when publishing github releases
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v4
       with:
         fetch-depth: 1
+        
     - name: Set up Python
-      uses: actions/setup-python@v1
+      uses: actions/setup-python@v5
       with:
-        python-version: 3.7
+        python-version: "3.12"
+        
+    - name: Load cached Poetry installation
+      id: cached-poetry
+      uses: actions/cache@v4
+      with:
+        path: ~/.local
+        key: poetry-${{ runner.os }}-deploy
+        
     - name: Install Poetry
-      uses: dschep/install-poetry-action@v1.2
-    - name: Cache poetry venv
-      uses: actions/cache@v1
-      id: cache
+      if: steps.cached-poetry.outputs.cache-hit != 'true'
+      uses: snok/install-poetry@v1
       with:
-        path: ~/.virtualenvs
-        key: poetry-3.7-${{ hashFiles('**/poetry.lock') }}
-        restore-keys: |
-          poetry-3.7-${{ hashFiles('**/poetry.lock') }}
-    - name: Set Poetry config
-      run: |
-        poetry config virtualenvs.in-project false
-        poetry config virtualenvs.path ~/.virtualenvs
-        poetry config pypi-token.pypi ${{ secrets.POETRY_PYPI_TOKEN_PYPI }}
+        version: latest
+        virtualenvs-create: true
+        virtualenvs-in-project: true
+        
+    - name: Load cached venv
+      id: cached-poetry-dependencies
+      uses: actions/cache@v4
+      with:
+        path: .venv
+        key: venv-${{ runner.os }}-3.12-${{ hashFiles('**/poetry.lock') }}
+        
     - name: Install dependencies
-      if: steps.cache.outputs.cache-hit != 'true'
-      run: poetry install -v
+      if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+      run: poetry install --no-interaction --no-root
+      
+    - name: Install project
+      run: poetry install --no-interaction
+      
+    - name: Configure Poetry for PyPI
+      run: poetry config pypi-token.pypi ${{ secrets.POETRY_PYPI_TOKEN_PYPI }}
+      
     - name: Deploy using poetry
-      run: poetry publish --build -u __token__ -p ${{ secrets.POETRY_PYPI_TOKEN_PYPI }}
+      run: poetry publish --build
 

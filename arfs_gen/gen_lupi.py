@@ -9,25 +9,25 @@ def _checkLupiParam(
     problemName, lupiType, n_strel, n_weakrel, n_priv_weakrel, partition, partition_priv
 ):
     """
-        Checks if the parameters supplied to the genLupiData() function are okay.
+    Checks if the parameters supplied to the genLupiData() function are okay.
 
-        Parameters
-        ----------
-        problemName : Str
-            Must be one of ['classification', 'regression', 'ordinalRegression']
-        lupiType : Str
-            Must be one of ['cleanLabels', 'cleanFeatures']
-        n_strel : int
-            Stands for the number of strongly relevant features to generate in genLupiData()
-            Must be greater than 0
-        n_weakrel : int
-            Must be equal to the length of the partition list
-        n_priv_weakrel : int
-            Must be equal to the length of the partition_priv list
-        partition : list of int
-            The length of the list must be equal to n_weakrel
-        partition_priv : list of int
-            The length of the list must be equal to n_priv_weakrel
+    Parameters
+    ----------
+    problemName : Str
+        Must be one of ['classification', 'regression', 'ordinalRegression']
+    lupiType : Str
+        Must be one of ['cleanLabels', 'cleanFeatures']
+    n_strel : int
+        Stands for the number of strongly relevant features to generate in genLupiData()
+        Must be greater than 0
+    n_weakrel : int
+        Must be equal to the length of the partition list
+    n_priv_weakrel : int
+        Must be equal to the length of the partition_priv list
+    partition : list of int
+        The length of the list must be equal to n_weakrel
+    partition_priv : list of int
+        The length of the list must be equal to n_priv_weakrel
     """
 
     if type(problemName) is not ProblemName:
@@ -139,45 +139,45 @@ def genLupiData(
     label_noise=0.0,
 ):
     """
-            Generate Lupi Data for Classification, Regression and Ordinal Regression Problems
+    Generate Lupi Data for Classification, Regression and Ordinal Regression Problems
 
-            Parameters
-            ----------
-            problemName : ProblemName
-                Defines the type of y-values of the problem. Example `ProblemName.CLASSIFICATION`.
-            n_samples : int, optional
-                Number of samples
-            random_state : object, optional
-                Randomstate object used for generation.
-            n_ordinal_bins : int, optional
-                Number of bins in which the regressional target variable is split to form the ordinal classes,
-                Only has an effect if problemType == 'ordinalRegression'
-            n_strel : int, optional
-                Number of features which are mandatory for the underlying model (strongly relevant)
-            n_weakrel : int, optional
-                Number of weakly relevant features
-            n_repeated : int, optional
-                Number of features which are clones of existing ones.
-            n_irrel : int, optional
-                Number of features which are irrelevant to the underlying model
-            label_noise: float, optional
-                Percentage of labels which get permutated.
-
-
-            Returns
-            -------
-            X : array of shape [n_samples, (n_strel + n_weakrel + n_repeated + n_irrel)]
-                The generated samples
-            X_priv : array with same shape as X
-                The generated privileged samples
-            y : array of shape [n_samples]
-                The generated target values
-                In case of problemType == 'classification' : values are in [0,1]
-                In case of problemType == 'regression' : values are continious
-                In case of problemType == 'ordinalRegression' : values are in [0, n_ordinal_bins]
+    Parameters
+    ----------
+    problemName : ProblemName
+        Defines the type of y-values of the problem. Example `ProblemName.CLASSIFICATION`.
+    n_samples : int, optional
+        Number of samples
+    random_state : object, optional
+        Randomstate object used for generation.
+    n_ordinal_bins : int, optional
+        Number of bins in which the regressional target variable is split to form the ordinal classes,
+        Only has an effect if problemType == 'ordinalRegression'
+    n_strel : int, optional
+        Number of features which are mandatory for the underlying model (strongly relevant)
+    n_weakrel : int, optional
+        Number of weakly relevant features
+    n_repeated : int, optional
+        Number of features which are clones of existing ones.
+    n_irrel : int, optional
+        Number of features which are irrelevant to the underlying model
+    label_noise: float, optional
+        Percentage of labels which get permutated.
 
 
-        """
+    Returns
+    -------
+    X : array of shape [n_samples, (n_strel + n_weakrel + n_repeated + n_irrel)]
+        The generated samples
+    X_priv : array with same shape as X
+        The generated privileged samples
+    y : array of shape [n_samples]
+        The generated target values
+        In case of problemType == 'classification' : values are in [0,1]
+        In case of problemType == 'regression' : values are continious
+        In case of problemType == 'ordinalRegression' : values are in [0, n_ordinal_bins]
+
+
+    """
 
     random_state = check_random_state(random_state)
     n_informative = n_strel + (n_weakrel > 0)
